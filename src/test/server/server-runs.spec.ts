@@ -1,4 +1,4 @@
-import createServer from "../../src/server";
+import createServer from "../../server";
 import request from "supertest";
 
 const app = createServer();
