@@ -1,5 +1,6 @@
 import createServer from "./server";
 import config from "./config";
+import { connectDB } from "./db";
 
 const startServer = () => {
     const app = createServer();
@@ -9,5 +10,8 @@ const startServer = () => {
         console.log(`Running on port ${port}`);
     });
 };
+
+// Connect to MongoDB
+connectDB();
 
 startServer();

@@ -2,21 +2,17 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import routes from "./routes/index";
 import config from "./config";
 import cors from "cors";
-import connectDB from "./db";
 
 const morgan = require("morgan");
 
 export default function createServer() {
     const app: Application = express();
 
-    // Connect to MongoDB
-    connectDB();
-
     // Middleware
     if (config.NODE_ENV === "development") {
         app.use(morgan("dev"));
     }
-    app.use(express.json());
+    app.use(express.json({ limit: "50mb" }));
 
     var corsOptions: { origin: string; optionsSuccessStatus: number } = {
         origin: "http://localhost: 3000",
@@ -31,6 +27,16 @@ export default function createServer() {
     });
 
     app.use(routes);
+
+    // Error Handling
+    app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+        const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+        res.status(statusCode);
+        res.json({
+            message: error.message,
+            stack: config.NODE_ENV === "production" ? null : error.stack,
+        });
+    });
 
     return app;
 }

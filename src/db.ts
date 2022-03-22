@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import config from "./config";
 
-const uri =
+const uri: string =
     config.NODE_ENV === "test" ? config.MONGO_URI_TEST : config.MONGO_URI;
 
-const connectDB = async () => {
+export const connectDB = async () => {
     await mongoose
         .connect(uri)
         .then((res) => {
@@ -20,5 +20,3 @@ const connectDB = async () => {
             console.log(error);
         });
 };
-
-export default connectDB;
