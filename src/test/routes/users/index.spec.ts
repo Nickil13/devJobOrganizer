@@ -5,64 +5,62 @@ import chai from "chai";
 let should = chai.should();
 
 const app = createServer();
+const defaultUser: { name: string; email: string; password: string } = {
+    name: "Piper",
+    email: "piper@example.com",
+    password: "123",
+};
+let token: string;
+let defaultId: string;
 
 describe("Users", () => {
+    // Add default user
     beforeEach((done) => {
+        request(app)
+            .post("/auth/user")
+            .send(defaultUser)
+            .expect(200)
+            .end(function (err) {
+                if (err) return done();
+                return done();
+            });
+    });
+
+    // Login default user
+    beforeEach((done) => {
+        request(app)
+            .post("/auth")
+            .send({ email: defaultUser.email, password: defaultUser.password })
+            .expect(200)
+            .end(function (err, res) {
+                token = res.body.token;
+                defaultId = res.body.user._id;
+                if (err) return done();
+                return done();
+            });
+    });
+
+    afterEach((done) => {
         User.deleteMany({}, (err) => {
             done();
         });
     });
 
-    describe("/POST user", function () {
-        it("should create a new user", function (done) {
-            let user = {
-                name: "Piper",
-                email: "piper@example.com",
-                password: "123",
-            };
-
+    describe("/GET/:id user", function () {
+        it("should GET a user by the given id", function (done) {
             request(app)
-                .post("/users")
-                .send(user)
-                .expect("Content-Type", /json/)
-                .expect(201)
+                .get(`/users/${defaultId}`)
+                .expect(200)
                 .end(function (err, res) {
                     res.body.should.be.a("object");
                     res.body.should.have.property("name");
                     res.body.should.have.property("email");
                     res.body.should.have.property("password");
                     res.body.should.have.property("applications");
-                    res.body.should.have.property("_id");
+                    res.body.should.have.property("_id").eql(defaultId);
                     if (err) return done(err);
                     return done();
                 });
-        });
-    });
-
-    describe("/GET/:id user", function () {
-        it("should GET a user by the given id", function (done) {
-            let user = new User({
-                name: "Piper",
-                email: "piper@example.com",
-                password: "123",
-            });
-
-            user.save((err, user) => {
-                request(app)
-                    .get(`/users/${user.id}`)
-                    .expect(200)
-                    .end(function (err, res) {
-                        res.body.should.be.a("object");
-                        res.body.should.have.property("name");
-                        res.body.should.have.property("email");
-                        res.body.should.have.property("password");
-                        res.body.should.have.property("applications");
-                        res.body.should.have.property("_id").eql(user.id);
-
-                        if (err) return done(err);
-                        return done();
-                    });
-            });
         });
     });
 
@@ -79,6 +77,39 @@ describe("Users", () => {
                     if (err) return done(err);
                     return done();
                 });
+        });
+    });
+
+    describe("/PUT edit user", function () {
+        it("should successfully update the user's name", function (done) {
+            request(app)
+                .put(`/users/${defaultId}`)
+                .set({ Authorization: `Bearer ${token}` })
+                .send({ name: "Piper1" })
+                .expect("Content-Type", /json/)
+                .expect(200)
+                .end(function (err, res) {
+                    res.body.should.have.property("name").eql("Piper1");
+                    if (err) return done();
+                    return done();
+                });
+        });
+    });
+
+    describe("/DELETE user", function () {
+        it("should successfully delete a user by id", function (done) {
+            request(app)
+                .delete(`/users/${defaultId}`)
+                .auth(token, { type: "bearer" })
+                .expect(200)
+                .end(function (err, res) {
+                    res.body.should.have
+                        .property("message")
+                        .eql("User successfully removed");
+                    if (err) return done(err);
+                    return done();
+                });
+            // });
         });
     });
 });
