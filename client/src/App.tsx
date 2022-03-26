@@ -1,18 +1,21 @@
-import React from "react";
-import "./App.css";
-import Button from "@mui/material/Button";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
-import { Typography } from "@mui/material";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <div className="App">
-                <Typography variant="h1">Dev Job Organizer</Typography>
-                <Button variant="contained">Hello World</Button>
-            </div>
-        </ThemeProvider>
+        <>
+            <ThemeProvider theme={theme}>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Login />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                    </Routes>
+                </Router>
+            </ThemeProvider>
+        </>
     );
 }
 
