@@ -1,17 +1,30 @@
 import React from "react";
-import { Navbar } from "../components";
-import { Container, Paper, Typography } from "@mui/material";
+import {
+    Analytics,
+    Applications,
+    JobMap,
+    Navbar,
+    Sidebar,
+} from "../components";
+import { Container, Box } from "@mui/material";
+import { Routes, Route } from "react-router-dom";
 
 export default function Dashboard() {
     return (
-        <div>
+        <>
             <Navbar />
-            <Container>
-                <div className="job-applications">
-                    <Typography variant="h4">My Job Applications</Typography>
-                    <Paper variant="outlined"></Paper>
-                </div>
-            </Container>
-        </div>
+            <Box sx={{ display: "flex" }}>
+                <Sidebar />
+                <Container>
+                    <div className="content">
+                        <Routes>
+                            <Route path="/" element={<Applications />} />
+                            <Route path="/analytics" element={<Analytics />} />
+                            <Route path="/map" element={<JobMap />} />
+                        </Routes>
+                    </div>
+                </Container>
+            </Box>
+        </>
     );
 }

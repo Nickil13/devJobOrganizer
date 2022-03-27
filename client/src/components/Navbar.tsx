@@ -12,10 +12,10 @@ const Navbar: React.FC<{}> = () => {
                         component="div"
                         sx={{ flexGrow: 1, alignSelf: "center" }}
                     >
-                        Dev Job Application Organizer
+                        DevJO
                     </Typography>
                     <IconButton size="large" edge="end" aria-label="menu">
-                        <MenuIcon />
+                        <MenuIcon sx={{ display: { sm: "none" } }} />
                     </IconButton>
                 </Toolbar>
             </AppBar>
