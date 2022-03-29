@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
-
+import { ApplicationContext } from "../context/applicationContext";
+import { ApplicationContextType } from "../context/applicationContext";
 import {
     Button,
     Container,
@@ -15,9 +16,13 @@ import {
 } from "@mui/material";
 
 export default function Login() {
+    const { login, error } = React.useContext(
+        ApplicationContext
+    ) as ApplicationContextType;
+
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [password, setPassword] = useState<string>();
-    const [email, setEmail] = useState<string>();
+    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const navigate = useNavigate();
 
     const handleClickShowPassword = () => {
@@ -37,9 +42,23 @@ export default function Login() {
         };
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
+        // ): Promise<any> => {
         e.preventDefault();
-        console.log("logging in");
-        navigate("/dashboard");
+        try {
+            login(email, password);
+            console.log("logging in");
+            navigate("/dashboard");
+        } catch (error) {
+            console.log(error);
+        }
+
+        // try {
+        //     await login(email, password);
+        //     console.log("logging in");
+        //     navigate("/dashboard");
+        // } catch (error) {
+        //     console.log(error);
+        // }
     };
     return (
         <div>

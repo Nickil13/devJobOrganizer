@@ -4,7 +4,7 @@ interface User {
     name: string;
     email: string;
     password: string;
-    applications: [Types.ObjectId];
+    applications: Types.ObjectId[];
 }
 
 const schema = new Schema<User>({

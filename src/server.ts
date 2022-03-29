@@ -30,6 +30,7 @@ export default function createServer() {
 
     // Error Handling
     app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+        console.log("inside error handler");
         const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
         res.status(statusCode);
         res.json({

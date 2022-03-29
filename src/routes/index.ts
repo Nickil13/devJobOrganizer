@@ -4,7 +4,7 @@ import users from "./users";
 
 const router = Router();
 
-router.use("/auth", auth);
-router.use("/users", users);
+router.use("/api/auth", auth);
+router.use("/api/users", users);
 
 export default router;

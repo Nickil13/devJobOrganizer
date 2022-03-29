@@ -1,4 +1,6 @@
 import React from "react";
+import { ApplicationContext } from "../context/applicationContext";
+import { ApplicationContextType } from "../context/applicationContext";
 import {
     Analytics,
     Applications,
@@ -10,6 +12,10 @@ import { Container, Box } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 
 export default function Dashboard() {
+    const { name, email } = React.useContext(
+        ApplicationContext
+    ) as ApplicationContextType;
+
     return (
         <>
             <Navbar />

@@ -1,5 +1,8 @@
 import React from "react";
 import {
+    Button,
+    Box,
+    Divider,
     Drawer,
     List,
     ListItem,
@@ -11,6 +14,7 @@ import PieChartIcon from "@mui/icons-material/PieChart";
 import MapIcon from "@mui/icons-material/Map";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
+import { AccountCircle, Logout } from "@mui/icons-material";
 
 const drawerWidth: number = 240;
 
@@ -52,6 +56,28 @@ const Sidebar: React.FC<{}> = () => {
                     </ListItem>
                 </Link>
             </List>
+            <Divider />
+            <Button>Add Application</Button>
+            <Box className="sidebar-footer">
+                <List>
+                    <Link to="/dashboard/account">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <AccountCircle />
+                            </ListItemIcon>
+                            <ListItemText primary="Account" />
+                        </ListItem>
+                    </Link>
+                    <Link to="/">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <Logout />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
+                        </ListItem>
+                    </Link>
+                </List>
+            </Box>
         </Drawer>
     );
 };

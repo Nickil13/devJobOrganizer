@@ -1,0 +1,88 @@
+[
+    {
+        "_id": 1,
+        "name": "BlackSquare",
+        "position": "Junior Developer",
+        "date": "March 14, 2022",
+        "location": {
+            "city": "Calgary",
+            "province": "Alberta",
+            "address": "Suite 1210,s 335 - 8th Ave SW",
+            "postalCode": "T2P1C9",
+            "remote": true
+        },
+        "stack": [
+            "JavaScript",
+            "React",
+            "Gatsby",
+            "Rails",
+            "Ruby",
+            "AWS",
+            "Cloudformation",
+            "Terraform",
+            "Docker",
+            "Git"
+        ],
+        "stage": "Application Sent",
+        "listingURL": "https://bsq.bamboohr.com/jobs/view.php?id=103",
+        "websiteURL": "https://www.blacksquare.io/",
+        "notes": []
+    },
+    {
+        "_id": 2,
+        "name": "LoKnow",
+        "position": "Front End Developer",
+        "date": "February 19, 2022",
+        "location": {
+            "city": "Calgary",
+            "province": "Alberta",
+            "address": "550, 1201 - 5 Street SW",
+            "postalCode": "T2R 0Y6",
+            "remote": false
+        },
+        "stack": [
+            "HTML5",
+            "CSS3",
+            "JavaScript",
+            "Adobe Creative Suite",
+            "LESS",
+            "SASS",
+            "React",
+            "Vue"
+        ],
+        "stage": "Building Cover Letter",
+        "listingURL": "#",
+        "websiteURL": "https://loknow.com/",
+        "notes": []
+    },
+    {
+        "_id": 3,
+        "name": "Zymewire",
+        "position": "Junior Software Developer",
+        "date": "March 26, 2022",
+        "location": {
+            "city": "Calgary",
+            "province": "Alberta",
+            "address": "",
+            "postalCode": "",
+            "remote": false
+        },
+        "stack": [
+            "Ruby",
+            "Rails",
+            "JavaScript",
+            "React",
+            "Scala",
+            "Linux",
+            "ElasticSearch",
+            "Docker",
+            "MongoDB",
+            "PostgreSQL",
+            "Python"
+        ],
+        "stage": "Application Sent",
+        "listingURL": "https://careers.zymewire.com/job-posting/junior-software-developer-2",
+        "websiteURL": "https://welcome.zymewire.com/",
+        "notes": ["NLP!"]
+    }
+]

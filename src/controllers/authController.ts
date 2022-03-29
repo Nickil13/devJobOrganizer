@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import { User } from "../models/UserModel";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+dotenv.config();
 
 const jwtSecret: string = process.env.JWT_SECRET || "";
 
@@ -22,7 +24,7 @@ const login = async (req: Request, res: Response) => {
         const token = await jwt.sign({ id: user._id }, jwtSecret, {
             expiresIn: 3600,
         });
-
+        console.log(token, user);
         return res.json({
             token,
             user: {
@@ -55,7 +57,8 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
         throw new Error("username already active.");
     }
     // Hash password
-    const hash = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
 
     const user = await User.create({
         name,
@@ -71,6 +74,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
     if (user) {
         // Generate token
         res.status(201);
+
         res.json({ token, user });
     } else {
         res.status(400);

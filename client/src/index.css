@@ -62,7 +62,16 @@ section {
     align-items: center;
 }
 .job-applications {
-    background-color: pink;
+    /* background-color: pink; */
+}
+.application-table {
+    margin-top: 3rem;
+    border: 1px solid var(--clr-primary);
+    max-width: 60rem;
+}
+
+.application-table .MuiTableCell-head {
+    font-weight: 700;
 }
 
 .stack-analytics {
@@ -74,6 +83,12 @@ section {
 }
 
 .drawer-desktop .MuiDrawer-paper {
+    display: flex;
     top: 65px;
+    height: calc(100vh - 65px);
     padding: 1rem;
+}
+
+.sidebar-footer {
+    margin-top: auto;
 }
