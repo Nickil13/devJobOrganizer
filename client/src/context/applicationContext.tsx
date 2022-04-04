@@ -1,25 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import applicationData from "../data.json";
-
-interface Application {
-    _id: number;
-    name: string;
-    position: string;
-    date: string;
-    location: {
-        city: string;
-        province: string;
-        address?: string;
-        postalCode?: string;
-        remote: boolean;
-    };
-    stack: string[];
-    stage: string;
-    listingURL: string;
-    websiteURL: string;
-    notes: string[];
-}
+import { Application } from "../typings/typings";
 
 export type ApplicationContextType = {
     name: string;
@@ -34,11 +15,11 @@ export type ApplicationContextType = {
         confirmPassword: string
     ) => void;
     login: (email: string, password: string) => void;
+    logout: () => void;
     createApplication: (application: Application) => void;
     updateApplication: (id: number) => void;
     // getApplication: (id: number) => Application;
     // deleteApplication: (id: number) => void;
-    error: string;
 };
 
 export const ApplicationContext =
@@ -47,14 +28,33 @@ export const ApplicationContext =
 const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-        localStorage.getItem("dev-jo-token") !== null
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [token, setToken] = useState<string>(
+        localStorage.getItem("dev-jo-token") || ""
     );
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [applications, setApplications] = useState<Application[]>([
-        ...applicationData,
-    ]);
-    const [error, setError] = useState<string>("");
+    const [applications, setApplications] = useState<Application[]>([]);
+
+    const loadUser = React.useCallback(async () => {
+        try {
+            const { data } = await axios.get("/api/auth/user", tokenConfig());
+
+            setIsAuthenticated(true);
+            setName(data.name);
+            setEmail(data.email);
+            setApplications(data.applications);
+        } catch (error: any) {
+            console.log(error);
+        }
+    }, []);
+
+    useEffect(() => {
+        // If a token exists, but the user hasn't been loaded. Load User.
+        if (token && !name) {
+            console.log("loading user");
+            loadUser();
+        }
+    }, [loadUser]);
 
     const register = async (
         name: string,
@@ -63,7 +63,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
         confirmPassword: string
     ) => {
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+            throw new Error("Passwords do not match");
         } else {
             const config = {
                 headers: {
@@ -80,9 +80,17 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
                 });
         }
     };
+
+    const logout = () => {
+        setName("");
+        setEmail("");
+        setIsAuthenticated(false);
+        setApplications([]);
+
+        localStorage.removeItem("dev-jo-token");
+    };
+
     const login = async (email: string, password: string) => {
-        setError("");
-        console.log("login", email, password);
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -95,39 +103,34 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
                 { email, password },
                 config
             );
-            console.log(data);
             setName(data.user.name);
             setEmail(data.user.email);
             setIsAuthenticated(true);
-            localStorage.setItem("dev-jo-token", data.token);
+            localStorage.setItem("dev-jo-token", JSON.stringify(data.token));
             setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            throw error;
+        }
+    };
+
+    const createApplication = async (application: Application) => {
+        const newApplications = [...applications, application];
+        setIsLoading(true);
+
+        try {
+            const { data } = await axios.put(
+                "/api/auth",
+                { applications: newApplications },
+                tokenConfig()
+            );
+            console.log(data);
+            setIsLoading(false);
+            setApplications([...data.applications]);
         } catch (error) {
             console.log(error);
             setIsLoading(false);
-            // setError(error);
         }
-    };
-    const createApplication = (application: Application) => {
-        const newApplication: Application = {
-            _id: Math.random(),
-            name: application.name,
-            position: application.position,
-            date: application.date,
-            location: {
-                city: application.location.city,
-                province: application.location.province,
-                address: application.location.address,
-                postalCode: application.location.postalCode,
-                remote: application.location.remote,
-            },
-            stack: application.stack,
-            stage: application.stage,
-            listingURL: application.listingURL,
-            websiteURL: application.websiteURL,
-            notes: [],
-        };
-
-        setApplications([...applications, newApplication]);
     };
 
     const updateApplication = (id: number) => {
@@ -136,6 +139,26 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
                 application.stage = "Reviewed";
             }
         });
+    };
+
+    const tokenConfig = () => {
+        type Config = {
+            headers: {
+                "Content-type": string;
+                Authorization?: string;
+            };
+        };
+        // Headers
+        let config: Config = {
+            headers: {
+                "Content-type": "application/json",
+            },
+        };
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+        }
+        return config;
     };
 
     return (
@@ -148,9 +171,9 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
                 applications,
                 register,
                 login,
+                logout,
                 createApplication,
                 updateApplication,
-                error,
             }}
         >
             {children}

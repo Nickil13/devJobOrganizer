@@ -17,7 +17,7 @@ describe("Users", () => {
     // Add default user
     beforeEach((done) => {
         request(app)
-            .post("/auth/user")
+            .post("/api/auth/user")
             .send(defaultUser)
             .expect(200)
             .end(function (err) {
@@ -29,7 +29,7 @@ describe("Users", () => {
     // Login default user
     beforeEach((done) => {
         request(app)
-            .post("/auth")
+            .post("/api/auth")
             .send({ email: defaultUser.email, password: defaultUser.password })
             .expect(200)
             .end(function (err, res) {
@@ -49,7 +49,7 @@ describe("Users", () => {
     describe("/GET/:id user", function () {
         it("should GET a user by the given id", function (done) {
             request(app)
-                .get(`/users/${defaultId}`)
+                .get(`/api/users/${defaultId}`)
                 .expect(200)
                 .end(function (err, res) {
                     res.body.should.be.a("object");
@@ -68,7 +68,7 @@ describe("Users", () => {
         it("should fail, since the user with that id doesnt exist", function (done) {
             var id = "612d738780ed367e08c8d671";
             request(app)
-                .get(`/users/${id}`)
+                .get(`/api/users/${id}`)
                 .expect(404)
                 .end(function (err, res) {
                     res.body.should.have
@@ -83,7 +83,7 @@ describe("Users", () => {
     describe("/PUT edit user", function () {
         it("should successfully update the user's name", function (done) {
             request(app)
-                .put(`/users/${defaultId}`)
+                .put(`/api/users/${defaultId}`)
                 .set({ Authorization: `Bearer ${token}` })
                 .send({ name: "Piper1" })
                 .expect("Content-Type", /json/)
@@ -99,7 +99,7 @@ describe("Users", () => {
     describe("/DELETE user", function () {
         it("should successfully delete a user by id", function (done) {
             request(app)
-                .delete(`/users/${defaultId}`)
+                .delete(`/api/users/${defaultId}`)
                 .auth(token, { type: "bearer" })
                 .expect(200)
                 .end(function (err, res) {

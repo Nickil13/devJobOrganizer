@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 import { ApplicationContext } from "../context/applicationContext";
@@ -16,14 +16,21 @@ import {
 } from "@mui/material";
 
 export default function Login() {
-    const { login, error } = React.useContext(
+    const { login, isAuthenticated } = React.useContext(
         ApplicationContext
     ) as ApplicationContextType;
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string>("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/dashboard");
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -41,25 +48,27 @@ export default function Login() {
             }
         };
 
-    const submitForm = (e: React.FormEvent<HTMLFormElement>): void => {
-        // ): Promise<any> => {
+    const submitForm = async (
+        e: React.FormEvent<HTMLFormElement>
+    ): Promise<void> => {
         e.preventDefault();
-        try {
-            login(email, password);
-            console.log("logging in");
-            navigate("/dashboard");
-        } catch (error) {
-            console.log(error);
-        }
 
-        // try {
-        //     await login(email, password);
-        //     console.log("logging in");
-        //     navigate("/dashboard");
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        if (email && password) {
+            try {
+                await login(email, password);
+                console.log("logging in");
+                navigate("/dashboard");
+            } catch (error: any) {
+                let message: string = error.response.data
+                    ? error.response.data.message
+                    : error.response.data;
+                setError(message);
+            }
+        } else {
+            setError("Fill in all fields");
+        }
     };
+
     return (
         <div>
             <Container>
@@ -122,6 +131,7 @@ export default function Login() {
                             <Button sx={{ my: 2 }} type="submit">
                                 Login
                             </Button>
+                            <p>{error}</p>
                         </form>
                     </Paper>
                     <div></div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Button,
     Box,
@@ -15,10 +15,23 @@ import MapIcon from "@mui/icons-material/Map";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
 import { AccountCircle, Logout } from "@mui/icons-material";
+import {
+    ApplicationContext,
+    ApplicationContextType,
+} from "../context/applicationContext";
+import ApplicationModal from "./ApplicationModal";
 
 const drawerWidth: number = 240;
 
 const Sidebar: React.FC<{}> = () => {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { logout } = React.useContext(
+        ApplicationContext
+    ) as ApplicationContextType;
+
+    const closeDialog = () => {
+        setIsDialogOpen(false);
+    };
     return (
         <Drawer
             variant="permanent"
@@ -57,7 +70,13 @@ const Sidebar: React.FC<{}> = () => {
                 </Link>
             </List>
             <Divider />
-            <Button>Add Application</Button>
+            <Button onClick={() => setIsDialogOpen(true)}>
+                Add Application
+            </Button>
+            <ApplicationModal
+                closeDialog={closeDialog}
+                isDialogOpen={isDialogOpen}
+            />
             <Box className="sidebar-footer">
                 <List>
                     <Link to="/dashboard/account">
@@ -69,7 +88,7 @@ const Sidebar: React.FC<{}> = () => {
                         </ListItem>
                     </Link>
                     <Link to="/">
-                        <ListItem button>
+                        <ListItem button onClick={logout}>
                             <ListItemIcon>
                                 <Logout />
                             </ListItemIcon>

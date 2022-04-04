@@ -16,7 +16,7 @@ describe("Auth routes", function () {
             };
 
             request(app)
-                .post("/auth/user")
+                .post("/api/auth/user")
                 .send(user)
                 .expect("Content-Type", /json/)
                 .expect(201)
@@ -45,7 +45,7 @@ describe("Auth routes", function () {
             });
             user.save((res, user) => {
                 request(app)
-                    .post("/auth")
+                    .post("/api/auth")
                     .send({ email: user.email, password: user.password })
                     .expect("Content-Type", /json/)
                     .expect(200)
@@ -67,7 +67,7 @@ describe("Auth routes", function () {
             });
             user.save((res, user) => {
                 request(app)
-                    .post("/auth")
+                    .post("/api/auth")
                     .send({ email: user.email, password: "1234" })
                     .expect("Content-Type", /json/)
                     .expect(400)

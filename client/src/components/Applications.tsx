@@ -53,12 +53,14 @@ const Applications: React.FC<{}> = () => {
                                         <a
                                             href={application.listingURL}
                                             target="_blank"
+                                            rel="noreferrer"
                                         >
                                             <LinkIcon />
                                         </a>
                                         <a
                                             href={application.websiteURL}
                                             target="_blank"
+                                            rel="noreferrer"
                                         >
                                             <PublicIcon />
                                         </a>

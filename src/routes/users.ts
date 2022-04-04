@@ -8,7 +8,7 @@ import { auth } from "../middleware/authMiddleware";
 
 const router = Router();
 router
-    .route("/:id")
+    .route("/")
     .get(getUserById)
     .put(auth, updateUser)
     .delete(auth, deleteUser);
