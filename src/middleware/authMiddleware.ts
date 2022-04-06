@@ -13,11 +13,17 @@ export const auth = asyncHandler(
         if (authHeader && authHeader.startsWith("Bearer")) {
             token = authHeader.split(" ")[1];
 
-            const decoded = jwt.verify(token, jwtSecret);
-            const { id } = <JwtPayload>decoded;
-            req.user = await User.findById(id).select("-password");
+            try {
+                const decoded = jwt.verify(token, jwtSecret);
 
-            next();
+                const { id } = <JwtPayload>decoded;
+
+                req.user = await User.findById(id).select("-password");
+
+                next();
+            } catch (error) {
+                res.status(500);
+            }
         } else {
             res.status(401);
             throw new Error("Not authorized, token failed");

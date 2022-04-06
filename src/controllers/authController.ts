@@ -11,10 +11,13 @@ const jwtSecret: string = process.env.JWT_SECRET || "";
 // @route GET /auth
 // @desc Get the logged in user
 // @access Private
-const loadUser = (req: Request, res: Response) => {
-    User.findById(req.user.id)
-        .select("-password")
-        .then((user) => res.json(user));
+const loadUser = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        res.json(user);
+    } catch (error) {
+        res.status(404).json("User does not exist");
+    }
 };
 
 // @route PUT /auth
@@ -22,7 +25,7 @@ const loadUser = (req: Request, res: Response) => {
 // @access Private
 const updateUser = async (req: Request, res: Response) => {
     const user = await User.findById(req.user.id).select("-password");
-    console.log(req.body);
+
     if (user) {
         user.name = req.body.user || user.name;
         user.email = req.body.email || user.email;
@@ -55,7 +58,7 @@ const login = async (req: Request, res: Response) => {
             { id: user._id },
             jwtSecret,
             {
-                expiresIn: 3600,
+                expiresIn: `${process.env.JWT_EXPIRES}`,
             },
             (err, token) => {
                 if (err) throw err;
@@ -103,7 +106,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
 
     // Generate jwt token
     const token = await jwt.sign({ id: user._id }, jwtSecret, {
-        expiresIn: 3600,
+        expiresIn: `${process.env.JWT_EXPIRES}`,
     });
 
     if (user) {

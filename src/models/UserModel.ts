@@ -10,7 +10,7 @@ interface User {
 interface Application {
     name: string;
     position: string;
-    date: Date;
+    date: string;
     location: {
         city: string;
         province: string;
@@ -28,7 +28,7 @@ interface Application {
 const applicationSchema = new Schema<Application>({
     name: { type: String, required: true },
     position: { type: String, required: true },
-    date: { type: Date, default: Date.now },
+    date: { type: String, default: new Date().toDateString() },
     location: {
         city: { type: String, required: true },
         province: { type: String, required: true },

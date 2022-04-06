@@ -71,6 +71,12 @@ section {
 .application-table .MuiTableCell-head {
     font-weight: 700;
 }
+.application-table .MuiTableBody-root .MuiTableRow-root {
+    cursor: pointer;
+}
+.application-table .MuiTableBody-root .MuiTableRow-root:hover {
+    background-color: var(--clr-primary);
+}
 
 .stack-analytics {
     background-color: skyblue;

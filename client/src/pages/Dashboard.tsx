@@ -1,8 +1,11 @@
 import React from "react";
-import { ApplicationContext } from "../context/applicationContext";
-import { ApplicationContextType } from "../context/applicationContext";
+import {
+    ApplicationContext,
+    ApplicationContextType,
+} from "../context/applicationContext";
 import {
     Analytics,
+    ApplicationDetails,
     Applications,
     JobMap,
     Navbar,
@@ -27,6 +30,10 @@ export default function Dashboard() {
                             <Route path="/" element={<Applications />} />
                             <Route path="/analytics" element={<Analytics />} />
                             <Route path="/map" element={<JobMap />} />
+                            <Route
+                                path="/application/:id"
+                                element={<ApplicationDetails />}
+                            />
                         </Routes>
                     </div>
                 </Container>

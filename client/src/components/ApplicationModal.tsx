@@ -24,6 +24,7 @@ import {
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { DatePicker } from "@mui/lab";
+import { formatDateString } from "../utilities/formatDateString";
 
 interface Props {
     closeDialog(): void;
@@ -47,13 +48,13 @@ const ApplicationModal: React.FC<Props> = ({ closeDialog, isDialogOpen }) => {
         ApplicationContext
     ) as ApplicationContextType;
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const newApplication = {
             name,
             position,
-            date,
+            date: date ? date : new Date().toDateString(),
             location: {
                 city,
                 province,
@@ -68,7 +69,7 @@ const ApplicationModal: React.FC<Props> = ({ closeDialog, isDialogOpen }) => {
         };
 
         try {
-            await createApplication(newApplication);
+            createApplication(newApplication);
             closeDialog();
         } catch (error) {
             console.log(error);
@@ -177,7 +178,11 @@ const ApplicationModal: React.FC<Props> = ({ closeDialog, isDialogOpen }) => {
                                     label="Date"
                                     value={date}
                                     onChange={(newDate) =>
-                                        setDate(newDate?.toString() || "")
+                                        setDate(
+                                            newDate
+                                                ? formatDateString(newDate)
+                                                : ""
+                                        )
                                     }
                                     renderInput={(params) => (
                                         <TextField {...params} />

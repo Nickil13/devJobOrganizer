@@ -8,6 +8,8 @@ export type ApplicationContextType = {
     isAuthenticated: boolean;
     isLoading: boolean;
     applications: Application[];
+
+    loadUser: () => void;
     register: (
         name: string,
         email: string,
@@ -17,9 +19,9 @@ export type ApplicationContextType = {
     login: (email: string, password: string) => void;
     logout: () => void;
     createApplication: (application: Application) => void;
-    updateApplication: (id: number) => void;
-    // getApplication: (id: number) => Application;
-    // deleteApplication: (id: number) => void;
+    updateApplication: (id: string) => void;
+
+    // deleteApplication: (id: string) => void;
 };
 
 export const ApplicationContext =
@@ -36,15 +38,21 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [applications, setApplications] = useState<Application[]>([]);
 
     const loadUser = React.useCallback(async () => {
+        setIsLoading(true);
         try {
-            const { data } = await axios.get("/api/auth/user", tokenConfig());
+            const { data } = await axios.get(
+                "/api/auth/user",
+                tokenConfig(token)
+            );
 
             setIsAuthenticated(true);
             setName(data.name);
             setEmail(data.email);
-            setApplications(data.applications);
+            setApplications([...data.applications]);
+            setIsLoading(false);
         } catch (error: any) {
             console.log(error);
+            setIsLoading(false);
         }
     }, []);
 
@@ -54,7 +62,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
             console.log("loading user");
             loadUser();
         }
-    }, [loadUser]);
+    }, [loadUser, token, name]);
 
     const register = async (
         name: string,
@@ -91,21 +99,18 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     const login = async (email: string, password: string) => {
-        const config = {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        };
         setIsLoading(true);
         try {
             const { data } = await axios.post(
                 "/api/auth",
                 { email, password },
-                config
+                tokenConfig()
             );
             setName(data.user.name);
             setEmail(data.user.email);
+            setApplications(data.user.applications);
             setIsAuthenticated(true);
+
             localStorage.setItem("dev-jo-token", JSON.stringify(data.token));
             setIsLoading(false);
         } catch (error) {
@@ -122,9 +127,9 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
             const { data } = await axios.put(
                 "/api/auth",
                 { applications: newApplications },
-                tokenConfig()
+                tokenConfig(token)
             );
-            console.log(data);
+
             setIsLoading(false);
             setApplications([...data.applications]);
         } catch (error) {
@@ -133,7 +138,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
         }
     };
 
-    const updateApplication = (id: number) => {
+    const updateApplication = (id: string) => {
         applications?.filter((application: Application) => {
             if (application._id === id) {
                 application.stage = "Reviewed";
@@ -141,17 +146,17 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
         });
     };
 
-    const tokenConfig = () => {
+    const tokenConfig = (token?: string) => {
         type Config = {
             headers: {
-                "Content-type": string;
+                "Content-Type": string;
                 Authorization?: string;
             };
         };
         // Headers
         let config: Config = {
             headers: {
-                "Content-type": "application/json",
+                "Content-Type": "application/json",
             },
         };
 
@@ -164,6 +169,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     return (
         <ApplicationContext.Provider
             value={{
+                loadUser,
                 name,
                 email,
                 isAuthenticated,
@@ -184,4 +190,5 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
 export const useGlobalContext = () => {
     return useContext(ApplicationContext);
 };
+
 export default ApplicationProvider;

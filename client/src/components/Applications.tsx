@@ -13,11 +13,19 @@ import { ApplicationContext } from "../context/applicationContext";
 import { ApplicationContextType } from "../context/applicationContext";
 import LinkIcon from "@mui/icons-material/Link";
 import PublicIcon from "@mui/icons-material/Public";
+import { useNavigate } from "react-router-dom";
 
 const Applications: React.FC<{}> = () => {
     const { applications } = React.useContext(
         ApplicationContext
     ) as ApplicationContextType;
+    const navigate = useNavigate();
+
+    const onRowClick =
+        (applicationID: string) =>
+        (e: React.MouseEvent<HTMLTableRowElement>) => {
+            navigate(`/dashboard/application/${applicationID}`);
+        };
 
     return (
         <section className="job-applications">
@@ -35,9 +43,12 @@ const Applications: React.FC<{}> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {applications.map((application, index) => {
+                        {applications?.map((application, index) => {
                             return (
-                                <TableRow key={index}>
+                                <TableRow
+                                    key={index}
+                                    onClick={onRowClick(application._id || "")}
+                                >
                                     <TableCell>{application.name}</TableCell>
                                     <TableCell>
                                         {application.position}

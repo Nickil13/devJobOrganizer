@@ -1,5 +1,5 @@
 export interface Application {
-    _id?: number;
+    _id?: string;
     name: string;
     position: string;
     date: string;
@@ -16,3 +16,7 @@ export interface Application {
     websiteURL: string;
     notes?: string[];
 }
+
+export type ApplicationParams = {
+    id: string | undefined;
+};
