@@ -19,9 +19,9 @@ export type ApplicationContextType = {
     login: (email: string, password: string) => void;
     logout: () => void;
     createApplication: (application: Application) => void;
-    updateApplication: (id: string) => void;
+    updateApplication: (id: string, application: Application) => void;
 
-    // deleteApplication: (id: string) => void;
+    deleteApplication: (id: string) => void;
 };
 
 export const ApplicationContext =
@@ -138,12 +138,83 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
         }
     };
 
-    const updateApplication = (id: string) => {
-        applications?.filter((application: Application) => {
-            if (application._id === id) {
-                application.stage = "Reviewed";
+    const updateApplication = async (id: string, application: Application) => {
+        const {
+            name,
+            position,
+            date,
+            stage,
+            stack,
+            listingURL,
+            websiteURL,
+            location: { city, province, address, postalCode, remote },
+        } = application;
+
+        const toEdit = applications.find(
+            (application) => application._id !== id
+        );
+
+        if (toEdit) {
+            let newApplications = applications.map((application) => {
+                if (application._id === id) {
+                    application.name = name;
+                    application.position = position;
+                    application.date = date;
+                    application.stage = stage;
+                    application.stack = stack;
+                    application.listingURL = listingURL;
+                    application.websiteURL = websiteURL;
+                    application.location = {
+                        city,
+                        province,
+                        address,
+                        postalCode,
+                        remote,
+                    };
+                }
+                return application;
+            });
+
+            setIsLoading(true);
+
+            try {
+                const { data } = await axios.put(
+                    "/api/auth",
+                    { applications: newApplications },
+                    tokenConfig(token)
+                );
+
+                setIsLoading(false);
+                setApplications([...data.applications]);
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
             }
-        });
+        } else {
+            console.log("couldnt find application");
+        }
+    };
+
+    const deleteApplication = async (id: string) => {
+        const newApplications = applications.filter(
+            (application) => application._id !== id
+        );
+
+        setIsLoading(true);
+
+        try {
+            const { data } = await axios.put(
+                "/api/auth",
+                { applications: newApplications },
+                tokenConfig(token)
+            );
+
+            setIsLoading(false);
+            setApplications([...data.applications]);
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+        }
     };
 
     const tokenConfig = (token?: string) => {
@@ -180,6 +251,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
                 logout,
                 createApplication,
                 updateApplication,
+                deleteApplication,
             }}
         >
             {children}

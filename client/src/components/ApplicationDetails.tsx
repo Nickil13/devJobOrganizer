@@ -7,27 +7,50 @@ import {
     ListItem,
     ListItemText,
     Stack,
+    Button,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import {
     ApplicationContext,
     ApplicationContextType,
 } from "../context/applicationContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ApplicationParams } from "../typings/typings";
-import { FaReact, FaNodeJs } from "react-icons/fa";
+import { Box } from "@mui/system";
+import EditApplicationModal from "./EditApplicationModal";
+import { tech as stackData } from "../stackTech";
 
 const ApplicationDetails: React.FC<{}> = () => {
-    const { applications, isLoading } = React.useContext(
+    const { applications, isLoading, deleteApplication } = React.useContext(
         ApplicationContext
     ) as ApplicationContextType;
     const { id } = useParams<ApplicationParams>();
+    const navigate = useNavigate();
+    const [isEditModalShowing, setIsEditModalShowing] =
+        useState<boolean>(false);
     const currentApplication = applications.find(
         (application) => application._id === id
     );
 
+    const handleDelete =
+        (id: string | undefined) =>
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (id) {
+                deleteApplication(id);
+                navigate("/dashboard");
+            } else {
+                console.log("ID is undefined");
+            }
+        };
     return (
         <section>
+            {isEditModalShowing && (
+                <EditApplicationModal
+                    closeDialog={() => setIsEditModalShowing(false)}
+                    isDialogOpen={isEditModalShowing}
+                    currentApplication={currentApplication}
+                />
+            )}
             {isLoading ? (
                 <CircularProgress />
             ) : currentApplication ? (
@@ -92,8 +115,16 @@ const ApplicationDetails: React.FC<{}> = () => {
                                     primary="Stack"
                                     secondary={
                                         <>
-                                            <FaNodeJs />
-                                            <FaReact />
+                                            {currentApplication.stack.map(
+                                                (name) => {
+                                                    const icon = stackData.find(
+                                                        (item) =>
+                                                            item.name === name
+                                                    );
+                                                    console.log(icon);
+                                                    return name;
+                                                }
+                                            )}
                                         </>
                                     }
                                 />
@@ -106,6 +137,14 @@ const ApplicationDetails: React.FC<{}> = () => {
                             {currentApplication.notes}
                         </Typography>
                     </Paper>
+                    <Box sx={{ mt: 1 }}>
+                        <Button variant="outlined" onClick={handleDelete(id)}>
+                            Delete application
+                        </Button>
+                        <Button onClick={() => setIsEditModalShowing(true)}>
+                            Edit application
+                        </Button>
+                    </Box>
                 </Container>
             ) : (
                 <p>Application not found.</p>
