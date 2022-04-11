@@ -11,8 +11,7 @@ import {
 import React from "react";
 import { ApplicationContext } from "../context/applicationContext";
 import { ApplicationContextType } from "../context/applicationContext";
-import LinkIcon from "@mui/icons-material/Link";
-import PublicIcon from "@mui/icons-material/Public";
+
 import { useNavigate } from "react-router-dom";
 
 const Applications: React.FC<{}> = () => {
@@ -39,7 +38,6 @@ const Applications: React.FC<{}> = () => {
                             <TableCell>Date</TableCell>
                             <TableCell>Loc</TableCell>
                             <TableCell>Stage</TableCell>
-                            <TableCell>URL</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -60,22 +58,6 @@ const Applications: React.FC<{}> = () => {
                                             " (REMOTE)"}
                                     </TableCell>
                                     <TableCell>{application.stage}</TableCell>
-                                    <TableCell>
-                                        <a
-                                            href={application.listingURL}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <LinkIcon />
-                                        </a>
-                                        <a
-                                            href={application.websiteURL}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <PublicIcon />
-                                        </a>
-                                    </TableCell>
                                 </TableRow>
                             );
                         })}

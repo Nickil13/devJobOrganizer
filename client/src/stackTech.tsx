@@ -16,6 +16,9 @@ import {
     SiMocha,
     SiJest,
     SiDocker,
+    SiJavascript,
+    SiHtml5,
+    SiCss3,
 } from "react-icons/si";
 
 enum techCat {
@@ -30,94 +33,109 @@ enum techCat {
 interface Tech {
     name: string;
     category: string;
-    icon: IconType;
+    icon: JSX.Element;
 }
 
 const tech: Tech[] = [
     {
+        name: "JavaScript",
+        category: techCat.Frontend,
+        icon: <SiJavascript />,
+    },
+    {
+        name: "HTML5",
+        category: techCat.Frontend,
+        icon: <SiHtml5 />,
+    },
+    {
+        name: "CSS3",
+        category: techCat.Frontend,
+        icon: <SiCss3 />,
+    },
+    {
         name: "React",
         category: techCat.Frontend,
-        icon: FaReact,
+        icon: <FaReact />,
     },
     {
         name: "Node.js",
         category: techCat.Backend,
-        icon: FaNodeJs,
+        icon: <FaNodeJs />,
     },
     {
         name: "Rails",
         category: techCat.Backend,
-        icon: SiRubyonrails,
+        icon: <SiRubyonrails />,
     },
     {
         name: "Ruby",
         category: techCat.Backend,
-        icon: SiRuby,
+        icon: <SiRuby />,
     },
     {
         name: "MongoDB",
         category: techCat.Backend,
-        icon: SiMongodb,
+        icon: <SiMongodb />,
     },
     {
         name: "MySQL",
         category: techCat.Backend,
-        icon: SiPostgresql,
+        icon: <SiPostgresql />,
     },
     {
         name: "PostgreSQL",
         category: techCat.Backend,
-        icon: SiMysql,
+        icon: <SiMysql />,
     },
     {
         name: "Next.js",
         category: techCat.Frontend,
-        icon: SiNextdotjs,
+        icon: <SiNextdotjs />,
     },
     {
         name: "Python",
         category: techCat.Backend,
-        icon: SiPython,
+        icon: <SiPython />,
     },
     {
         name: "Sass",
         category: techCat.Styling,
-        icon: SiSass,
+        icon: <SiSass />,
     },
     {
         name: "JQuery",
         category: techCat.Frontend,
-        icon: SiJquery,
+        icon: <SiJquery />,
     },
     {
         name: "Express",
         category: techCat.Backend,
-        icon: SiExpress,
+        icon: <SiExpress />,
     },
     {
         name: "MUI",
         category: techCat.Styling,
-        icon: SiMaterialui,
+        icon: <SiMaterialui />,
     },
     {
         name: "Storybook",
         category: techCat.Testing,
-        icon: SiStorybook,
+        icon: <SiStorybook />,
     },
     {
         name: "Mocha",
         category: techCat.Testing,
-        icon: SiMocha,
+        icon: <SiMocha />,
     },
     {
         name: "Jest",
         category: techCat.Testing,
-        icon: SiJest,
+        icon: <SiJest />,
     },
     {
         name: "Docker",
         category: techCat.PackageManager,
-        icon: SiDocker,
+        icon: <SiDocker />,
     },
 ];
 

@@ -207,9 +207,7 @@ const ApplicationModal: React.FC<Props> = ({ closeDialog, isDialogOpen }) => {
                                     <MenuItem value="Application Sent">
                                         Application Sent
                                     </MenuItem>
-                                    <MenuItem value="No Offer">
-                                        No Offer
-                                    </MenuItem>
+                                    <MenuItem value="Closed">Closed</MenuItem>
                                     <MenuItem value="On-Site Interview">
                                         On-Site Interview
                                     </MenuItem>

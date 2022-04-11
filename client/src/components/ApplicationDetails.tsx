@@ -3,9 +3,6 @@ import {
     Container,
     Paper,
     Typography,
-    List,
-    ListItem,
-    ListItemText,
     Stack,
     Button,
 } from "@mui/material";
@@ -19,6 +16,8 @@ import { ApplicationParams } from "../typings/typings";
 import { Box } from "@mui/system";
 import EditApplicationModal from "./EditApplicationModal";
 import { tech as stackData } from "../stackTech";
+import LinkIcon from "@mui/icons-material/Link";
+import PublicIcon from "@mui/icons-material/Public";
 
 const ApplicationDetails: React.FC<{}> = () => {
     const { applications, isLoading, deleteApplication } = React.useContext(
@@ -61,83 +60,89 @@ const ApplicationDetails: React.FC<{}> = () => {
                     <Typography variant="h5">
                         {currentApplication.position}
                     </Typography>
-                    <Stack direction="row" spacing={2}>
-                        <List>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Date"
-                                    secondary={currentApplication.date}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Location"
-                                    secondary={
-                                        <>
-                                            <span>
-                                                {
-                                                    currentApplication.location
-                                                        .city
-                                                }
-                                                ,{" "}
-                                                {
-                                                    currentApplication.location
-                                                        .province
-                                                }
+                    <div>
+                        <a
+                            href={currentApplication.listingURL}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="link-icon"
+                        >
+                            <LinkIcon />
+                        </a>
+                        <a
+                            href={currentApplication.websiteURL}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="link-icon"
+                        >
+                            <PublicIcon />
+                        </a>
+                    </div>
+                    <Stack direction="column" spacing={2} sx={{ my: 3 }}>
+                        <div>
+                            <Typography variant="h6">Date</Typography>
+                            <Typography variant="body1">
+                                {currentApplication.date}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="h6">Location</Typography>
+                            <>
+                                {currentApplication.location.remote && (
+                                    <span className="tag">remote</span>
+                                )}
+                                <ul className="job-location">
+                                    <li>
+                                        {currentApplication.location.city},{" "}
+                                        {currentApplication.location.province}
+                                    </li>
+                                    <li>
+                                        {currentApplication.location.address}
+                                    </li>
+                                    <li>
+                                        {currentApplication.location.postalCode}
+                                    </li>
+                                </ul>
+                            </>
+                        </div>
+                        <div>
+                            <Typography variant="h6">Stage</Typography>
+                            <Typography variant="body1">
+                                {currentApplication.stage}
+                            </Typography>
+                        </div>
+                        <div>
+                            <Typography variant="h6">Stack</Typography>
+                            <Box sx={{ mt: 1 }}>
+                                {currentApplication.stack.map((name, index) => {
+                                    const item = stackData.find(
+                                        (item) => item.name === name
+                                    );
+                                    if (item) {
+                                        const { icon } = item;
+                                        return (
+                                            <span
+                                                className="stack-icon"
+                                                key={index}
+                                            >
+                                                {icon}
                                             </span>
-                                            <span>
-                                                {
-                                                    currentApplication.location
-                                                        .address
-                                                }
-                                            </span>
-                                            <span>
-                                                {
-                                                    currentApplication.location
-                                                        .postalCode
-                                                }
-                                            </span>
+                                        );
+                                    }
 
-                                            {currentApplication.location
-                                                .remote && <span>REMOTE</span>}
-                                        </>
-                                    }
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Stage"
-                                    secondary={currentApplication.stage}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary="Stack"
-                                    secondary={
-                                        <>
-                                            {currentApplication.stack.map(
-                                                (name) => {
-                                                    const icon = stackData.find(
-                                                        (item) =>
-                                                            item.name === name
-                                                    );
-                                                    console.log(icon);
-                                                    return name;
-                                                }
-                                            )}
-                                        </>
-                                    }
-                                />
-                            </ListItem>
-                        </List>
+                                    return name;
+                                })}
+                            </Box>
+                        </div>
                     </Stack>
-                    <Paper variant="outlined">
+                    <Paper variant="outlined" sx={{ p: 2, minHeight: 200 }}>
                         <Typography variant="h6">Notes</Typography>
                         <Typography variant="body1">
-                            {currentApplication.notes}
+                            {currentApplication.notes &&
+                                (currentApplication.notes.length || <i>...</i>)}
                         </Typography>
                     </Paper>
-                    <Box sx={{ mt: 1 }}>
+                    <Box sx={{ mt: 3 }}>
                         <Button variant="outlined" onClick={handleDelete(id)}>
                             Delete application
                         </Button>

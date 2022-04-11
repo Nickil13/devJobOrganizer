@@ -42,7 +42,7 @@ const applicationSchema = new Schema<Application>({
         enum: [
             "Building Cover Letter",
             "Application Sent",
-            "No Offer",
+            "Closed",
             "On-Site Interview",
             "Online Interview",
             "Offer",

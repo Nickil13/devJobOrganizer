@@ -69,7 +69,7 @@ const EditApplicationModal: React.FC<Props> = ({
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(stack);
+
         const newApplication = {
             name,
             position,
@@ -261,9 +261,7 @@ const EditApplicationModal: React.FC<Props> = ({
                                     <MenuItem value="Application Sent">
                                         Application Sent
                                     </MenuItem>
-                                    <MenuItem value="No Offer">
-                                        No Offer
-                                    </MenuItem>
+                                    <MenuItem value="Closed">Closed</MenuItem>
                                     <MenuItem value="On-Site Interview">
                                         On-Site Interview
                                     </MenuItem>
@@ -285,6 +283,7 @@ const EditApplicationModal: React.FC<Props> = ({
                                 variant="filled"
                                 size="small"
                                 required
+                                value={city}
                                 onChange={onChange("city")}
                             />
 
@@ -294,6 +293,7 @@ const EditApplicationModal: React.FC<Props> = ({
                                 variant="filled"
                                 size="small"
                                 required
+                                value={province}
                                 onChange={onChange("province")}
                             />
                             <TextField
@@ -301,6 +301,7 @@ const EditApplicationModal: React.FC<Props> = ({
                                 label="Address"
                                 variant="filled"
                                 size="small"
+                                value={address}
                                 onChange={onChange("address")}
                             />
                             <TextField
@@ -308,11 +309,13 @@ const EditApplicationModal: React.FC<Props> = ({
                                 label="Postal Code"
                                 variant="filled"
                                 size="small"
+                                value={postalCode}
                                 onChange={onChange("postal-code")}
                             />
                             <FormControlLabel
                                 control={<Checkbox />}
                                 label="Remote"
+                                value={isRemote}
                                 onChange={(e: React.SyntheticEvent) =>
                                     setIsRemote(
                                         (e.target as HTMLInputElement).checked
