@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Application } from "../typings/typings";
 
+const LOCAL_TOKEN = "dev-jo-token";
+
 export type ApplicationContextType = {
     name: string;
     email: string;
@@ -24,17 +26,18 @@ export type ApplicationContextType = {
     deleteApplication: (id: string) => void;
 };
 
-export const ApplicationContext =
-    React.createContext<ApplicationContextType | null>(null);
+export const ApplicationContext = React.createContext<ApplicationContextType>(
+    null!
+);
 
 const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [token, setToken] = useState<string>(
-        localStorage.getItem("dev-jo-token") || ""
+        localStorage.getItem(LOCAL_TOKEN) || ""
     );
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [applications, setApplications] = useState<Application[]>([]);
 
     const loadUser = React.useCallback(async () => {
@@ -57,10 +60,18 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     }, []);
 
     useEffect(() => {
+        console.log("authenticated:", isAuthenticated);
+    }, [isAuthenticated]);
+    useEffect(() => {
+        console.log("loading:", isLoading);
+    }, [isLoading]);
+    useEffect(() => {
         // If a token exists, but the user hasn't been loaded. Load User.
         if (token && !name) {
             console.log("loading user");
             loadUser();
+        } else {
+            setIsLoading(false);
         }
     }, [loadUser, token, name]);
 
@@ -90,12 +101,12 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
     };
 
     const logout = () => {
+        localStorage.removeItem("dev-jo-token");
+
         setName("");
         setEmail("");
         setIsAuthenticated(false);
         setApplications([]);
-
-        localStorage.removeItem("dev-jo-token");
     };
 
     const login = async (email: string, password: string) => {
@@ -111,7 +122,7 @@ const ApplicationProvider: React.FC<React.ReactNode> = ({ children }) => {
             setApplications(data.user.applications);
             setIsAuthenticated(true);
 
-            localStorage.setItem("dev-jo-token", JSON.stringify(data.token));
+            localStorage.setItem(LOCAL_TOKEN, JSON.stringify(data.token));
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);

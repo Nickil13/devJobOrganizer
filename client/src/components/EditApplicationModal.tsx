@@ -27,7 +27,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { DatePicker } from "@mui/lab";
 import { formatDateString } from "../utilities/formatDateString";
 import { Application } from "../typings/typings";
-import { tech as stackData } from "../stackTech";
+import { tech as stackData } from "../data/stackTech";
 
 interface Props {
     closeDialog(): void;

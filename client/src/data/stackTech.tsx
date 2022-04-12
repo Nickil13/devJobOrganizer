@@ -1,4 +1,3 @@
-import { IconType } from "react-icons";
 import { FaReact, FaNodeJs } from "react-icons/fa";
 import {
     SiRubyonrails,

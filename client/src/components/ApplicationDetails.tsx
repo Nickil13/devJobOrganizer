@@ -10,19 +10,19 @@ import React, { useState } from "react";
 import {
     ApplicationContext,
     ApplicationContextType,
+    useGlobalContext,
 } from "../context/applicationContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { ApplicationParams } from "../typings/typings";
 import { Box } from "@mui/system";
 import EditApplicationModal from "./EditApplicationModal";
-import { tech as stackData } from "../stackTech";
+import { tech as stackData } from "../data/stackTech";
 import LinkIcon from "@mui/icons-material/Link";
 import PublicIcon from "@mui/icons-material/Public";
 
 const ApplicationDetails: React.FC<{}> = () => {
-    const { applications, isLoading, deleteApplication } = React.useContext(
-        ApplicationContext
-    ) as ApplicationContextType;
+    const { applications, isLoading, deleteApplication } =
+        useGlobalContext() as ApplicationContextType;
     const { id } = useParams<ApplicationParams>();
     const navigate = useNavigate();
     const [isEditModalShowing, setIsEditModalShowing] =

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AccountCircle, Visibility, VisibilityOff } from "@mui/icons-material";
 import { ApplicationContext } from "../context/applicationContext";
@@ -26,15 +26,15 @@ export default function Login() {
     const [error, setError] = useState<string>("");
     const navigate = useNavigate();
 
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
     useEffect(() => {
         if (isAuthenticated) {
             navigate("/dashboard");
         }
-    }, [isAuthenticated, navigate]);
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
+    }, [isAuthenticated]);
 
     const handleChange =
         (type: string) =>
